@@ -1,4 +1,4 @@
-import { Component, ReactNode } from "react";
+import {Component, ReactNode, Suspense} from "react";
 
 interface ErrorBoundaryState {
     hasError: boolean;
@@ -15,15 +15,15 @@ class ErrorBoundary extends Component<{ children: ReactNode }, ErrorBoundaryStat
     }
 
     static getDerivedStateFromError() {
-        return { hasError: true };
+        return {hasError: true};
     }
 
     render() {
-        console.log("error", this.state.hasError);
+        console.log("ErrorBoundary hasError:", this.state.hasError);
         if (this.state.hasError) {
             return (
                 <MiniPage>
-                    <div>oh snap</div>;
+                    <div>oh snap</div>
                 </MiniPage>
             );
         }
@@ -32,8 +32,13 @@ class ErrorBoundary extends Component<{ children: ReactNode }, ErrorBoundaryStat
     }
 }
 
-const MiniPage = ({ children }: { children: any }) => <ErrorBoundary>{children}</ErrorBoundary>;
+const MiniPage = ({children}: { children: any }) => <ErrorBoundary>{children}</ErrorBoundary>;
 
 export default function Demo() {
-    return <MiniPage>{Date.now()}</MiniPage>;
+    return <MiniPage>
+        {/*<Suspense>*/}
+        {/* Wrapping in suspense "fixes" it. */}
+            {Date.now()}
+        {/*</Suspense>*/}
+    </MiniPage>;
 }
